@@ -1,6 +1,7 @@
 #%%
 from pathlib import Path
 import pandas as pd
+from pandas.plotting import scatter_matrix
 import tarfile
 import urllib.request
 import matplotlib.pyplot as plt
@@ -80,4 +81,27 @@ strat_train_set, strat_test_set = strat_splits[ 0]
 for set_ in (strat_train_set, strat_test_set):
     set_.drop("income_cat", axis = 1, inplace = True)
 # %%
-housing_copy = strat_tr 
+housing_copy = strat_train_set.copy()
+housing = housing.drop("ocean_proximity", axis=1)
+
+#%%
+housing.plot(kind="scatter", x = "longitude", y="latitude", grid=True, alpha=0.2)
+plt.show() 
+# %%
+housing.plot(kind="scatter", x = "longitude", y="latitude", grid=True, 
+             s=housing["population"]/100,label="population",
+             c="median_house_value",cmap="jet", colorbar=True,
+             legend=True, sharex=False, figsize=(10,7))
+plt.show()
+# %%
+corr_matrix = housing.corr() # ya que el dataset no es tan grande podemos calcular el coeficiente de correlacion estandar (pearsons r)
+print(corr_matrix)
+# %%
+attributes = ["median_house_value", "median_income", "total_rooms", "housing_median_age"]
+scatter_matrix(housing[attributes], figsize=(12,8))
+plt.show()
+# %%
+housing.plot(kind="scatter", x="median_income", y="median_house_value",
+             alpha=0.1, grid=True)
+plt.show()
+# %%
